@@ -1,6 +1,6 @@
 # K8s AWS Deployment Pipeline
 
-A hands-on project practicing container orchestration with Kubernetes, built on top of an existing Spring Boot telemetry API.
+A hands-on project practicing container orchestration and infrastructure-as-code, built on top of an existing Spring Boot telemetry API.
 
 ## What's actually working
 
@@ -8,12 +8,13 @@ A hands-on project practicing container orchestration with Kubernetes, built on 
 - Deployed it to a local Kubernetes cluster (Minikube) using a Deployment + NodePort Service.
 - Verified the pod runs and the API responds correctly through the Kubernetes service.
 - The cluster crashed once due to low system memory and Kubernetes automatically restarted the pod on its own.
+- Wrote Terraform configuration to provision AWS infrastructure: a security group and a t2.micro EC2 instance (free-tier eligible), with Docker installed automatically via user_data. Validated successfully with terraform init and terraform validate.
 
-## What's next (not built yet)
+## What's next (not fully run yet)
 
-- Terraform folder exists but is currently empty. Plan is to provision real AWS infrastructure for this workload.
-- Currently uses imagePullPolicy Never since the image only lives in Minikube's local Docker.
+- Terraform code is written and validated but not yet applied against a live AWS account - my account is currently stuck in pending verification (AWS Support case open). Once resolved, terraform apply will provision the EC2 instance for real.
+- Currently uses imagePullPolicy Never for Kubernetes since the image only lives in Minikube's local Docker.
 
 ## What I learned
 
-Docker's buildx builder doesn't work with Minikube's containerd runtime out of the box, so used minikube image build instead. Also saw firsthand that Kubernetes pods restart automatically after a crash.
+Docker buildx doesn't work with Minikube's containerd runtime, so used minikube image build instead. Learned that Terraform provider binaries should never be committed to git - they can be hundreds of MB and get rejected by GitHub's file size limit, so .gitignore should exclude that folder from the start. Also saw firsthand that Kubernetes pods restart automatically after a crash.
